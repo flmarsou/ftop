@@ -23,6 +23,7 @@ typedef struct  t_win
 }   t_win;
 
 bool            cpu_info(t_cpu *cpu);
+void            cpu_menu(t_cpu cpu);
 
 
 #endif
