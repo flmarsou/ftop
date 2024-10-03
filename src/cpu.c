@@ -26,8 +26,11 @@ bool    cpu_info(t_cpu *cpu)
         {
             if ((targetEnd = strchr(targetStart, '\n')) != NULL)
             {
-                strncpy(cpu->model, strchr(targetStart, ':') + 2, targetEnd - (strchr(targetStart, ':') + 2));
-                cpu->model[targetEnd - (strchr(targetStart, ':') + 2)] = '\0';
+                if (targetEnd - (strchr(targetStart, ':') + 2) <= 63)
+                {
+                    strncpy(cpu->model, strchr(targetStart, ':') + 2, targetEnd - (strchr(targetStart, ':') + 2));
+                    cpu->model[targetEnd - (strchr(targetStart, ':') + 2)] = '\0';
+                }
             }
         }
 
@@ -64,4 +67,38 @@ bool    cpu_info(t_cpu *cpu)
     }
     close(fd);
     return (true);
+}
+
+void    cpu_menu(t_cpu cpu)
+{
+    // Creates the menu window.
+    WINDOW  *menu = newwin(0, 30, 0, 0);
+    box(menu, 0, 0);
+    
+    // Title
+    wattron(menu, A_BOLD);
+    mvwprintw(menu, 1, 1, "       CPU Detected:");
+    wattroff(menu, A_BOLD);
+
+    // Print CPU Model (with left padding)
+    char            *token = strtok(cpu.model, " ");
+    unsigned int    token_size;
+    unsigned int    x = 6;
+    unsigned int    y = 2;
+    unsigned int    padding = x;
+
+    while (token != NULL)
+    {
+        token_size = strlen(token);
+        if (x + token_size >= 30)
+        {
+            x = padding;
+            y++;
+        }
+        mvwprintw(menu, y, x, "%s", token);
+        x += token_size + 1;
+        token = strtok(NULL, " ");
+    }
+
+    wgetch(menu);
 }
