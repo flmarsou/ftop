@@ -3,14 +3,16 @@ EXE			:=	ftop
 
 # Files
 SRC			:=	./src/main.c \
-				./src/cpu.c \
+				./src/handle_input.c \
+				./src/cpu_info.c \
+				./src/cpu_menu.c \
 
 SOURCES		:=	${SRC}
 OBJECTS		:=	${SOURCES:%.c=obj/%.o}
 
 # Variables
 CC			:=	cc
-WARNFLAGS	:=	-Wall -Wextra
+WARNFLAGS	:=	-Wall -Wextra -fsanitize=address,leak
 LDFLAGS		:=	-lncurses
 
 # Makefile

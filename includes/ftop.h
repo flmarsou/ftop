@@ -7,23 +7,30 @@
 # include <stdlib.h>
 # include <string.h>
 # include <fcntl.h>
+# include <signal.h>
 
-typedef struct  t_cpu
+struct  s_layout
+{
+    unsigned int    selected;
+    unsigned int    checked[3];
+};
+
+struct  s_cpu
 {
     char            model[64];
     unsigned int    frequency;
     unsigned int    threads;
-    
-}   t_cpu;
+};
 
-typedef struct  t_win
+typedef struct  s_info
 {
-    unsigned int    xMax;
-    unsigned int    yMax;
-}   t_win;
+    struct s_cpu    cpu;
+    struct s_layout layout;
+}   t_info;
 
-bool            cpu_info(t_cpu *cpu);
-void            cpu_menu(t_cpu cpu);
+bool            cpu_info(t_info *cpu);
 
+void            handle_input(t_info *info);
+void            cpu_menu(t_info info, unsigned int xMax, unsigned int yMax);
 
 #endif
