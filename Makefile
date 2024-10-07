@@ -2,28 +2,33 @@
 EXE			:=	ftop
 
 # Files
-SRC			:=	./src/main.c \
-				./src/handle_input.c \
-				./src/cpu_info.c \
-				./src/cpu_menu.c \
+VPATH		:=	src
+
+SRC			:=	main.c \
+				handle_input.c \
+				cpu_info.c \
+				cpu_menu.c \
 
 SOURCES		:=	${SRC}
-OBJECTS		:=	${SOURCES:%.c=obj/%.o}
+OBJ_DIR		:=	obj
+OBJECTS		:=	${SOURCES:%.c=${OBJ_DIR}/%.o}
 
 # Variables
 CC			:=	cc
-WARNFLAGS	:=	-Wall -Wextra -fsanitize=address,leak
+CFLAGS		:=	-Wall -Wextra -Werror -fsanitize=address,leak -Iincludes
 LDFLAGS		:=	-lncurses
 
 # Makefile
 all:		${EXE}
 
 ${EXE}:		${OBJECTS}
-			@${CC} ${WARNFLAGS} ${OBJECTS} -o ${EXE} ${LDFLAGS}
+			${CC} ${CFLAGS} $^ -o $@ ${LDFLAGS}
 
-obj/%.o:	%.c
-			@mkdir -p obj/$(dir $<)
-			@${CC} ${WARNFLAGS} -c $< -o $@
+${OBJ_DIR}/%.o:	%.c | ${OBJ_DIR}
+			${CC} ${CFLAGS} -c $< -o $@
+
+${OBJ_DIR}:
+			@mkdir -p $@
 
 clean:
 			@rm -rf obj
