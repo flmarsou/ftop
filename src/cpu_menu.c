@@ -9,15 +9,20 @@ static void	draw_panel(unsigned int width, unsigned int height, unsigned int ySt
 	{
 		case 0:
 		{
-			mvwprintw(panel, 1, 2, "Temperature [°C]");
+			wclear(panel);
 			break ;
 		}
 		case 1:
 		{
-			mvwprintw(panel, 1, 2, "Frequency [MHz]");
+			mvwprintw(panel, 1, 2, "Temperature [°C]");
 			break ;
 		}
 		case 2:
+		{
+			mvwprintw(panel, 1, 2, "Frequency [MHz]");
+			break ;
+		}
+		case 3:
 		{
 			mvwprintw(panel, 1, 2, "Usage [%%]");
 			break ;
@@ -79,14 +84,26 @@ void	cpu_menu(t_info info, unsigned int xMax, unsigned int yMax)
 	}
 	wrefresh(menu);
 
-	// Create Panel Window(s)
-	unsigned int	win = 0;
+	// Creates Panel Window(s)
+	unsigned int	numberOfWin = 0;
+	unsigned int	panelHeight = 0;
+	unsigned int	remainingHeight = yMax;
+
 	for (unsigned int i = 0; i < 3; i++)
 	{
 		if (info.layout.checked[i])
 		{
-			draw_panel(xMax - 30, yMax / ticked, win * (yMax / ticked), i);
-			win++;
+			if (numberOfWin == ticked - 1)
+				panelHeight = remainingHeight;
+			else
+				panelHeight = yMax / ticked;
+
+			draw_panel(xMax - 30, panelHeight, numberOfWin * (yMax / ticked), i + 1);
+
+			remainingHeight -= panelHeight;
+			numberOfWin++;
 		}
+		else if (!numberOfWin)
+			draw_panel(0, 0, 0, 0);
 	}
 }
