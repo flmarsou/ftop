@@ -4,7 +4,7 @@ bool    cpu_info(t_info *info)
 {
 	int     fd;
 	ssize_t bytesRead;
-	char    buffer[10000];
+	char    buffer[256];
 	char    *targetStart;
 	char    *targetEnd;
 
@@ -17,7 +17,7 @@ bool    cpu_info(t_info *info)
 	}
 
 	// Reads and copies information from the CPU sheet.
-	while ((bytesRead = read(fd, buffer, sizeof(buffer))) > 0)
+	while ((bytesRead = read(fd, buffer, sizeof(buffer) - 1)) > 0)
 	{
 		buffer[bytesRead] = '\0';
 
